@@ -1,0 +1,241 @@
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/register [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 35, in register
+    code, message = u.register(user_id=user_id, password=password)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 58, in register
+    token = jwt_encode(user_id, terminal)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 21, in jwt_encode
+    return encoded.decode("utf-8")
+AttributeError: 'str' object has no attribute 'decode'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:26:40] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/register [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 35, in register
+    code, message = u.register(user_id=user_id, password=password)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 59, in register
+    self.conn.execute(
+AttributeError: 'psycopg2.extensions.connection' object has no attribute 'execute'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:27:28] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/register [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 35, in register
+    code, message = u.register(user_id=user_id, password=password)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 59, in register
+    self.conn.execute(
+AttributeError: 'psycopg2.extensions.connection' object has no attribute 'execute'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:27:33] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/register [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 35, in register
+    code, message = u.register(user_id=user_id, password=password)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 61, in register
+    self.cursor.execute(
+AttributeError: 'User' object has no attribute 'cursor'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:29:21] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:29:36] "[35m[1mPOST /auth/register HTTP/1.1[0m" 512 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:30:01] "[35m[1mPOST /auth/register HTTP/1.1[0m" 512 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:30:14] "[35m[1mPOST /auth/register HTTP/1.1[0m" 512 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:30:43] "POST /auth/register HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/login [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 16, in login
+    user_id=user_id, password=password, terminal=terminal
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 119, in login
+    cursor.close()
+AttributeError: 'NoneType' object has no attribute 'close'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:35:47] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/login [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 16, in login
+    user_id=user_id, password=password, terminal=terminal
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 120, in login
+    cursor.close()
+AttributeError: 'NoneType' object has no attribute 'close'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:37:15] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+ERROR:serve:Exception on /auth/login [POST]
+Traceback (most recent call last):
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\anaconda3\envs\bookstore\lib\site-packages\flask\app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\view\auth.py", line 16, in login
+    user_id=user_id, password=password, terminal=terminal
+  File "D:\schoolworks\ ˝æ›π‹¿ÌœµÕ≥\Bookstore_Postgre\data-management-system-hw2\bookstore\be\model\user.py", line 122, in login
+    cursor.close()
+AttributeError: 'NoneType' object has no attribute 'close'
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:38:03] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:40:09] "[35m[1mPOST /auth/login HTTP/1.1[0m" 530 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:41:23] "[35m[1mPOST /auth/login HTTP/1.1[0m" 530 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:41:47] "[35m[1mPOST /auth/login HTTP/1.1[0m" 530 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:49:17] "[35m[1mPOST /auth/login HTTP/1.1[0m" 528 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:50:55] "[35m[1mPOST /auth/login HTTP/1.1[0m" 530 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:51:50] "POST /auth/login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:52:38] "POST /auth/password HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:52:52] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:53:56] "POST /auth/login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:54:19] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 400 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:54:25] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:54:51] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:56:19] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:56:37] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:56:58] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:57:51] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:59:19] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 11:59:59] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 12:00:16] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 12:01:09] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 12:02:06] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 12:03:01] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 12:03:08] "[31m[1mPOST /auth/logout HTTP/1.1[0m" 401 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [19/Dec/2023 13:32:02] "[35m[1mPOST /seller/create_store HTTP/1.1[0m" 528 -

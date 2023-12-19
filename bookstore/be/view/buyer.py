@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from be.model.buyer import Buyer
+from model.buyer import Buyer
 
 bp_buyer = Blueprint("buyer", __name__, url_prefix="/buyer")
 
@@ -39,4 +39,29 @@ def add_funds():
     add_value = request.json.get("add_value")
     b = Buyer()
     code, message = b.add_funds(user_id, password, add_value)
+    return jsonify({"message": message}), code
+
+@bp_buyer.route("/receive_order", methods=["POST"])
+def receive_order():
+    user_id: str = request.json.get("user_id")
+    order_id: str = request.json.get("order_id")
+
+    b = Buyer()
+    code, message = b.receive_order(user_id, order_id)
+    return jsonify({"message": message}), code
+
+@bp_buyer.route("/buyer_orders", methods=["POST"])
+def get_buyer_orders():
+    user_id: str = request.json.get("user_id")
+    b = Buyer()
+    code, message, orders = b.get_buyer_orders(user_id)
+    return jsonify({"message": message, "orders": orders}), code
+
+
+@bp_buyer.route("/cancel_order", methods=["POST"])
+def cancel_order():
+    user_id: str = request.json.get("user_id")
+    order_id: str = request.json.get("order_id")
+    b = Buyer()
+    code, message = b.cancel_order(user_id, order_id)
     return jsonify({"message": message}), code

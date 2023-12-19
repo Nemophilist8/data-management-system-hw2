@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from be.model import seller
+from model import seller
 import json
 
 bp_seller = Blueprint("seller", __name__, url_prefix="/seller")
@@ -42,3 +42,18 @@ def add_stock_level():
     code, message = s.add_stock_level(user_id, store_id, book_id, add_num)
 
     return jsonify({"message": message}), code
+
+@bp_seller.route("/ship_order", methods=["POST"])
+def ship_order():
+    store_id: str = request.json.get("store_id")
+    order_id: str = request.json.get("order_id")
+    s = seller.Seller()
+    code, message = s.ship_order(store_id, order_id)
+    return jsonify({"message": message}), code
+
+@bp_seller.route("/seller_orders", methods=["POST"])
+def get_seller_orders():
+    user_id: str = request.json.get("user_id")
+    s = seller.Seller()
+    code, message, orders = s.get_seller_orders(user_id)
+    return jsonify({"message": message, "orders": orders}), code
