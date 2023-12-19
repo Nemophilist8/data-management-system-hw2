@@ -1,5 +1,4 @@
 from datetime import datetime
-
 import psycopg2
 import uuid
 import json
