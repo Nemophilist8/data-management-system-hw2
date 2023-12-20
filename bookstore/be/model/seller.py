@@ -33,10 +33,10 @@ class Seller(db_conn.DBConn):
                 cursor.execute(
                     "INSERT INTO book (id, title, author, publisher, original_title, translator, pub_year,\
                                        pages, price, currency_unit, binding, isbn, author_intro, book_intro,\
-                                       content, tags, picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                                       content, tags) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (book_data['id'], book_data['title'], book_data['author'], book_data['publisher'],book_data['original_title'], book_data['translator'], book_data['pub_year'],
                      book_data['pages'],book_data['price'], book_data['currency_unit'], book_data['binding'], book_data['isbn'],book_data['author_intro'], book_data['book_intro'],
-                     book_data['content'], book_data['tags'], book_data['picture']),
+                     book_data['content'], book_data['tags']),
                 )
                 self.conn.commit()
 

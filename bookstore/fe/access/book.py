@@ -20,8 +20,8 @@ class Book:
     author_intro: str
     book_intro: str
     content: str
-    tags: [str]
-    pictures: [bytes]
+    tags: str
+
 
     def __init__(self):
         self.tags = []

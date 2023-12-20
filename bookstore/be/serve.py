@@ -6,6 +6,7 @@ from flask import request
 from view import auth
 from view import seller
 from view import buyer
+from view import book
 from model.store import init_database
 from model.order_auto_cancel import OrderAutoCancel
 from apscheduler.schedulers.background import BackgroundScheduler  # 导入背景调度器
@@ -53,4 +54,5 @@ def be_run():
     app.register_blueprint(auth.bp_auth)
     app.register_blueprint(seller.bp_seller)
     app.register_blueprint(buyer.bp_buyer)
+    app.register_blueprint(book.bp_book)
     app.run()

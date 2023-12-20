@@ -19,7 +19,7 @@ class Store:
     def init_tables(self):
         try:
             conn = self.get_db_conn()
-            cursor =  conn.cursor()
+            cursor = conn.cursor()
             sql_commands = [
                 """
                 CREATE TABLE IF NOT EXISTS book
@@ -40,7 +40,6 @@ class Store:
                     book_intro TEXT,
                     content TEXT,
                     tags TEXT,
-                    picture BYTEA
                 );
                 """,
                 """
