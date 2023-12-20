@@ -1,12 +1,13 @@
 import logging
 import os
 import psycopg2
+import pymongo
 
 
 class Store:
     database: str
 
-    def __init__(self):
+    def __init__(self, host, port):
         self.db_params = {
             'host': '127.0.0.1',
             'database': 'bookstore',
@@ -15,6 +16,8 @@ class Store:
             'port': '5432'
         }
         self.init_tables()
+        self.client = pymongo.MongoClient(host,port)
+        self.db = self.client["bookstore"]
 
     def init_tables(self):
         try:
@@ -103,14 +106,17 @@ class Store:
         return psycopg2.connect(**self.db_params)
 
 
-database_instance = Store()
+database_instance: Store = None
 
-
-def init_database():
+def init_database(host,port):
     global database_instance
-    database_instance = Store()
+    database_instance = Store(host,port)
 
 
 def get_db_conn():
     global database_instance
     return database_instance.get_db_conn()
+
+def get_db_conn1():
+    global database_instance
+    return database_instance

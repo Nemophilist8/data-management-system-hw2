@@ -1,8 +1,11 @@
 import psycopg2
+import pymongo
 from model import error
 from model import db_conn
 import json
 from datetime import datetime
+from base64 import b64decode
+from bson.binary import Binary
 
 class Seller(db_conn.DBConn):
     def __init__(self):
@@ -29,6 +32,8 @@ class Seller(db_conn.DBConn):
             price = book_data['price']
             cursor = self.conn.cursor()
 
+            bookpic_collection = self.db["pic"]
+
             if not self.book_id_exist_in_all(book_data['id']):
                 cursor.execute(
                     "INSERT INTO book (id, title, author, publisher, original_title, translator, pub_year,\
@@ -38,17 +43,24 @@ class Seller(db_conn.DBConn):
                      book_data['pages'],book_data['price'], book_data['currency_unit'], book_data['binding'], book_data['isbn'],book_data['author_intro'], book_data['book_intro'],
                      book_data['content'], book_data['tags']),
                 )
-                self.conn.commit()
-
+                bookpic_collection.insert_one({'id':book_data['id'],'pic':Binary(b64decode(book_data['picture']))})
             cursor.execute(
                 "INSERT INTO store (store_id, book_id, price, stock_level) VALUES (%s, %s, %s, %s)",
                 (store_id, book_id, price, stock_level),
             )
             self.conn.commit()
-        except psycopg2.Error as e:
+        # except psycopg2.Error as e:
+        #     print(1,e)
+        #     return 528, "{}".format(str(e))
+        # except pymongo.errors.PyMongoError as e:
+        #     print(2,e)
+        #     return 528, "{}".format(str(e))
+        # except BaseException as e:
+        #     print(3,e)
+        #     return 530, "{}".format(str(e))
+        except Exception as e:
+            print(1,e)
             return 528, "{}".format(str(e))
-        except BaseException as e:
-            return 530, "{}".format(str(e))
         finally:
             if cursor:
                 cursor.close()

@@ -4,6 +4,9 @@ import psycopg2
 class DBConn:
     def __init__(self):
         self.conn = store.get_db_conn()
+        self.conn1 = store.get_db_conn1()
+        self.db = self.conn1.client['bookstore_pic']
+
 
     def user_id_exist(self, user_id):
         cursor = self.conn.cursor()

@@ -1,5 +1,6 @@
 import sqlite3
 import psycopg2
+import pymongo
 
 # 连接到 SQLite 数据库文件
 sqlite_connection = sqlite3.connect("book.db")
@@ -16,6 +17,11 @@ db_params = {
 }
 postgres_connection = psycopg2.connect(**db_params)
 postgres_cursor = postgres_connection.cursor()
+
+# 连接到 MongoDB 服务器
+mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = mongo_client["bookstore_pic"]
+bookpic_collection = db["pic"]
 
 # 从 SQLite 数据库中读取数据
 sqlite_cursor.execute("SELECT * FROM book")
@@ -41,22 +47,24 @@ for index,row in enumerate(sqlite_data):
         "book_intro": row[13],
         "content": row[14],
         "tags": row[15],
-        "picture": row[16]
         # 如果有图书封面图片字段，需要根据实际情况添加
     }
     try:
         # 插入数据到 PostgreSQL 表中
         postgres_cursor.execute("""
             INSERT INTO book (
-                id, title, author, publisher, original_title, translator, pub_year, 
-                pages, price, currency_unit, binding, isbn, author_intro, book_intro, 
+                id, title, author, publisher, original_title, translator, pub_year,
+                pages, price, currency_unit, binding, isbn, author_intro, book_intro,
                 content, tags, picture
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, tuple(book_doc.values()))
+        bookpic_collection.insert_one({'id':row[0],'pic':row[16]})
+        pass
         # 提交更改
     except Exception as e:
         print(e)
 
+# bookpic_collection.insert_one({'id':'123456','pic':''})
 # 提交更改
 postgres_connection.commit()
 
