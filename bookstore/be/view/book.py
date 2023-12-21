@@ -1,7 +1,10 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from model import book
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+from be.model import book
 
 bp_book = Blueprint("book", __name__, url_prefix="/book")
 

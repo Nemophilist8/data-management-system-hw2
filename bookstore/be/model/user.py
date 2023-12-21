@@ -2,7 +2,11 @@ import jwt
 import time
 import logging
 import psycopg2
-from model import error, db_conn
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+import logging
+from be.model import error, db_conn
 
 # encode a json string like:
 #   {
@@ -65,7 +69,6 @@ class User(db_conn.DBConn):
             )
             self.conn.commit()
         except psycopg2.Error as e:
-            print(e)
             return error.error_exist_user_id(user_id)
         finally:
             if cursor:

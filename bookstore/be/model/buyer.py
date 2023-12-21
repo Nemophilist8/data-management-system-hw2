@@ -1,10 +1,12 @@
 from datetime import datetime
 import psycopg2
 import uuid
-import json
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
 import logging
-from model import db_conn
-from model import error
+from be.model import db_conn
+from be.model import error
 
 
 class Buyer(db_conn.DBConn):
@@ -256,6 +258,7 @@ class Buyer(db_conn.DBConn):
                 return 200, "Order is already cancelled."
 
             elif status == "paid":
+
                 # 获取订单详细信息
                 cursor.execute(
                     "SELECT count, price from order_detail where order_id=%s", (order_id,)
@@ -278,20 +281,18 @@ class Buyer(db_conn.DBConn):
                     "UPDATE \"user\" SET balance = %s WHERE user_id = %s",
                     (new_balance, user_id),
                 )
+            # 取消订单，更新状态为 "cancelled"
+            cursor.execute(
+                "UPDATE \"order\" SET status = %s, cancelled_at = %s WHERE order_id = %s",
+                ('cancelled', datetime.now().isoformat(), order_id),
+            )
+            self.conn.commit()
 
-                # 取消订单，更新状态为 "cancelled"
-                cursor.execute(
-                    "UPDATE \"order\" SET status = %s, cancelled_at = %s WHERE order_id = %s",
-                    ('cancelled', datetime.now().isoformat(), order_id),
-                )
-
-                self.conn.commit()
         except psycopg2.Error as e:
             print(e)
             self.conn.rollback()
             return 528, "{}".format(str(e))
         except BaseException as e:
-            print(e)
             return 530, "{}".format(str(e))
         finally:
             if cursor:

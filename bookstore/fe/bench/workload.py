@@ -6,6 +6,7 @@ from fe.access import book
 from fe.access.new_seller import register_new_seller
 from fe.access.new_buyer import register_new_buyer
 from fe.access.buyer import Buyer
+from fe.access.seller import ship_order
 from fe import conf
 
 
@@ -29,59 +30,103 @@ class Payment:
         code = self.buyer.payment(self.order_id)
         return code == 200
 
+class ShipOrder:
+    def __init__(self, store_id, order_id):
+        self.store_id = store_id
+        self.order_id = order_id
+
+    def run(self):
+        code = ship_order(self.store_id, self.order_id)
+        return code == 200
+
+class ReceiveOrder:
+    def __init__(self, buyer: Buyer, order_id):
+        self.buyer = buyer
+        self.order_id = order_id
+
+    def run(self):
+        code = self.buyer.receive_order(order_id=self.order_id)
+        return code == 200
 
 class Workload:
     def __init__(self):
+        # 通过时间戳产生，唯一
         self.uuid = str(uuid.uuid1())
         self.book_ids = []
         self.buyer_ids = []
         self.store_ids = []
         self.book_db = book.BookDB(conf.Use_Large_DB)
+        # 书本数目
         self.row_count = self.book_db.get_book_count()
-
+        # 单位商店书本数量
         self.book_num_per_store = conf.Book_Num_Per_Store
         if self.row_count < self.book_num_per_store:
             self.book_num_per_store = self.row_count
+        # 单位商店顾客数量
         self.store_num_per_user = conf.Store_Num_Per_User
+        # 卖家数量
         self.seller_num = conf.Seller_Num
+        # 买家数量
         self.buyer_num = conf.Buyer_Num
+        # 用户会话数量
         self.session = conf.Session
+        # 书本默认库存
         self.stock_level = conf.Default_Stock_Level
+        # 用户默认财产
         self.user_funds = conf.Default_User_Funds
+        # 单批次书的数量
         self.batch_size = conf.Data_Batch_Size
+        # 每个会话的请求数量
         self.procedure_per_session = conf.Request_Per_Session
 
         self.n_new_order = 0
         self.n_payment = 0
+        self.n_shipment = 0
+        self.n_receive = 0
         self.n_new_order_ok = 0
         self.n_payment_ok = 0
+        self.n_shipment_ok = 0
+        self.n_receive_ok = 0
         self.time_new_order = 0
         self.time_payment = 0
+        self.time_shipment = 0
+        self.time_receive = 0
         self.lock = threading.Lock()
         # 存储上一次的值，用于两次做差
         self.n_new_order_past = 0
         self.n_payment_past = 0
+        self.n_shipment_past = 0
+        self.n_receive_past = 0
         self.n_new_order_ok_past = 0
         self.n_payment_ok_past = 0
+        self.n_shipment_ok_past = 0
+        self.n_receive_ok_past = 0
 
+    # 生成seller名称
     def to_seller_id_and_password(self, no: int) -> (str, str):
         return "seller_{}_{}".format(no, self.uuid), "password_seller_{}_{}".format(
             no, self.uuid
         )
 
+    # 生成buyer名称
     def to_buyer_id_and_password(self, no: int) -> (str, str):
-        return "buyer_{}_{}".format(no, self.uuid), "buyer_seller_{}_{}".format(
+        # return "buyer_{}_{}".format(no, self.uuid), "buyer_seller_{}_{}".format(
+        return "buyer_{}_{}".format(no, self.uuid), "password_buyer_{}_{}".format(
             no, self.uuid
         )
 
+    # 生成store名称
     def to_store_id(self, seller_no: int, i):
         return "store_s_{}_{}_{}".format(seller_no, i, self.uuid)
 
+    # 准备数据
     def gen_database(self):
         logging.info("load data")
         for i in range(1, self.seller_num + 1):
+            # 注册卖家
             user_id, password = self.to_seller_id_and_password(i)
             seller = register_new_seller(user_id, password)
+            # 给该卖家注册不同的商店
             for j in range(1, self.store_num_per_user + 1):
                 store_id = self.to_store_id(i, j)
                 code = seller.create_store(store_id)
@@ -89,6 +134,7 @@ class Workload:
                 self.store_ids.append(store_id)
                 row_no = 0
 
+                # 给商店注册不同的书
                 while row_no < self.book_num_per_store:
                     books = self.book_db.get_book_info(row_no, self.batch_size)
                     if len(books) == 0:
@@ -101,12 +147,14 @@ class Workload:
                     row_no = row_no + len(books)
         logging.info("seller data loaded.")
         for k in range(1, self.buyer_num + 1):
+            # 注册买家，注册资金
             user_id, password = self.to_buyer_id_and_password(k)
             buyer = register_new_buyer(user_id, password)
             buyer.add_funds(self.user_funds)
             self.buyer_ids.append(user_id)
         logging.info("buyer data loaded.")
 
+    # 准备下单
     def get_new_order(self) -> NewOrder:
         n = random.randint(1, self.buyer_num)
         buyer_id, buyer_password = self.to_buyer_id_and_password(n)
@@ -132,10 +180,16 @@ class Workload:
         self,
         n_new_order,
         n_payment,
+        n_shipment,
+        n_receive,
         n_new_order_ok,
         n_payment_ok,
+        n_shipment_ok,
+        n_receive_ok,
         time_new_order,
         time_payment,
+        time_shipment,
+        time_receive,
     ):
         # 获取当前并发数
         thread_num = len(threading.enumerate())
@@ -143,36 +197,55 @@ class Workload:
         self.lock.acquire()
         self.n_new_order = self.n_new_order + n_new_order
         self.n_payment = self.n_payment + n_payment
+        self.n_shipment = self.n_shipment + n_shipment
+        self.n_receive = self.n_receive + n_receive
         self.n_new_order_ok = self.n_new_order_ok + n_new_order_ok
         self.n_payment_ok = self.n_payment_ok + n_payment_ok
+        self.n_shipment_ok = self.n_shipment_ok + n_shipment_ok
+        self.n_receive_ok = self.n_receive_ok + n_receive_ok
         self.time_new_order = self.time_new_order + time_new_order
         self.time_payment = self.time_payment + time_payment
+        self.time_shipment = self.time_shipment + time_shipment
+        self.time_receive = self.time_receive + time_receive
         # 计算这段时间内新创建订单的总数目
         n_new_order_diff = self.n_new_order - self.n_new_order_past
         # 计算这段时间内新付款订单的总数目
         n_payment_diff = self.n_payment - self.n_payment_past
+        n_shipment_diff = self.n_shipment - self.n_shipment_past
+        n_receive_diff = self.n_receive - self.n_receive_past
 
         if (
             self.n_payment != 0
             and self.n_new_order != 0
-            and (self.time_payment + self.time_new_order)
+            and self.n_shipment != 0
+            and self.n_receive != 0
+            and (self.time_payment + self.time_new_order + self.time_shipment + self.time_receive)
         ):
             # TPS_C(吞吐量):成功创建订单数量/(提交订单时间/提交订单并发数 + 提交付款订单时间/提交付款订单并发数)
             # NO=OK:新创建订单数量
             # Thread_num:以新提交订单的数量作为并发数(这一次的TOTAL-上一次的TOTAL)
             # TOTAL:总提交订单数量
             # LATENCY:提交订单时间/处理订单笔数(只考虑该线程延迟，未考虑并发)
+            #
             # P=OK:新创建付款订单数量
             # Thread_num:以新提交付款订单的数量作为并发数(这一次的TOTAL-上一次的TOTAL)
             # TOTAL:总付款提交订单数量
             # LATENCY:提交付款订单时间/处理付款订单笔数(只考虑该线程延迟，未考虑并发)
-            logging.info(
-                "TPS_C={}, NO=OK:{} Thread_num:{} TOTAL:{} LATENCY:{} , P=OK:{} Thread_num:{} TOTAL:{} LATENCY:{}".format(
+            #
+            # S=OK:新创建发货订单数量
+            # TOTAL:总发货提交订单数量
+            # LATENCY:提交发货订单时间/处理发货订单笔数(只考虑该线程延迟，未考虑并发)
+
+            # logging.info(
+            print(
+                "TPS_C={}, NO=OK:{} Thread_num:{} TOTAL:{} LATENCY:{} , P=OK:{} Thread_num:{} TOTAL:{} LATENCY:{} , S=OK:{} Thread_num:{} TOTAL:{} LATENCY:{} , R=OK:{} Thread_num:{} TOTAL:{} LATENCY:{}".format(
                     int(
                         self.n_new_order_ok
                         / (
                             self.time_payment / n_payment_diff
                             + self.time_new_order / n_new_order_diff
+                            + self.time_shipment / n_shipment_diff
+                            + self.time_receive / n_receive_diff
                         )
                     ),  # 吞吐量:完成订单数/((付款所用时间+订单所用时间)/并发数)
                     self.n_new_order_ok,
@@ -180,15 +253,27 @@ class Workload:
                     self.n_new_order,
                     self.time_new_order
                     / self.n_new_order,  # 订单延迟:(创建订单所用时间/并发数)/新创建订单数
-                    self.n_payment_ok,
+                    self.n_payment_ok,   # P=OK
                     n_payment_diff,
                     self.n_payment,
                     self.time_payment / self.n_payment,  # 付款延迟:(付款所用时间/并发数)/付款订单数
+                    self.n_shipment_ok, # S=OK
+                    n_shipment_diff,
+                    self.n_shipment,
+                    self.time_shipment / self.n_shipment,
+                    self.n_receive_ok,  # R=OK
+                    n_receive_diff,
+                    self.n_receive,
+                    self.time_receive / self.n_receive
                 )
             )
         self.lock.release()
         # 旧值更新为新值，便于下一轮计算
         self.n_new_order_past = self.n_new_order
         self.n_payment_past = self.n_payment
+        self.n_shipment_past = self.n_shipment
+        self.n_receive_past = self.n_receive
         self.n_new_order_ok_past = self.n_new_order_ok
         self.n_payment_ok_past = self.n_payment_ok
+        self.n_shipment_ok_past = self.n_shipment_ok
+        self.n_receive_ok_past = self.n_receive_ok

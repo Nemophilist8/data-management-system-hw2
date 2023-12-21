@@ -1,7 +1,10 @@
 import psycopg2
-import pymongo
-from model import error
-from model import db_conn
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+
+from be.model import error
+from be.model import db_conn
 import json
 from datetime import datetime
 from base64 import b64decode
@@ -59,7 +62,6 @@ class Seller(db_conn.DBConn):
         #     print(3,e)
         #     return 530, "{}".format(str(e))
         except Exception as e:
-            print(1,e)
             return 528, "{}".format(str(e))
         finally:
             if cursor:

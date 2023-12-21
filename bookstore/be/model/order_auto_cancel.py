@@ -1,6 +1,10 @@
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+
 import threading
 from datetime import datetime, timedelta
-from model import error, db_conn
+from be.model import error, db_conn
 
 
 class OrderAutoCancel(db_conn.DBConn):
@@ -27,8 +31,8 @@ class OrderAutoCancel(db_conn.DBConn):
                 order_time = created_at
                 if order_time < time_interval:
                     cursor.execute(
-                        "UPDATE \"order\" set status = %s WHERE order_id = %s",
-                        ('cancelled', order_id),
+                        "UPDATE \"order\" SET status = %s, cancelled_at = %s WHERE order_id = %s",
+                        ('cancelled', datetime.now().isoformat(), order_id),
                     )
             conn.commit()
         except Exception as e:

@@ -1,14 +1,17 @@
 import logging
 import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+
 from flask import Flask
 from flask import Blueprint
 from flask import request
-from view import auth
-from view import seller
-from view import buyer
-from view import book
-from model.store import init_database
-from model.order_auto_cancel import OrderAutoCancel
+from be.view import auth
+from be.view import seller
+from be.view import buyer
+from be.view import book
+from be.model.store import init_database
+from be.model.order_auto_cancel import OrderAutoCancel
 from apscheduler.schedulers.background import BackgroundScheduler  # 导入背景调度器
 
 bp_shutdown = Blueprint("shutdown", __name__)

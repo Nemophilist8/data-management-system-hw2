@@ -1,7 +1,11 @@
 from flask import Blueprint
 from flask import request
 from flask import jsonify
-from model import seller
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+import logging
+from be.model import seller
 import json
 
 bp_seller = Blueprint("seller", __name__, url_prefix="/seller")

@@ -48,3 +48,48 @@ class Buyer:
         headers = {"token": self.token}
         r = requests.post(url, headers=headers, json=json)
         return r.status_code
+
+    def get_order_info(self, order_id):
+        json = {
+            "user_id": self.user_id,
+            "order_id": order_id,
+        }
+        url = urljoin(self.url_prefix, "buyer_orders")
+        headers = {"token": self.token}
+        r = requests.post(url, headers=headers, json=json)
+        assert r.status_code == 200
+        orders_info = r.json()
+        order_info = {}
+        for o in orders_info['orders']:
+            if o['order_id'] == order_id:
+                order_info = o
+        assert len(order_info.keys()) != 0
+        return order_info
+
+    def receive_order(self, order_id):
+        json = {
+            "user_id": self.user_id,
+            "order_id": order_id,
+        }
+        url = urljoin(self.url_prefix, "receive_order")
+        headers = {"token": self.token}
+        r = requests.post(url, headers=headers, json=json)
+        return r.status_code
+
+    def cancel_order(self, order_id):
+        json = {
+            "user_id": self.user_id,
+            "order_id": order_id,
+        }
+        url = urljoin(self.url_prefix, "cancel_order")
+        headers = {"token": self.token}
+        r = requests.post(url, headers=headers, json=json)
+        return r.status_code
+
+    def get_seller_order(self):
+        json = {
+            "user_id": self.user_id,
+        }
+        url = urljoin(self.url_prefix, "buyer_orders")
+        r = requests.post(url, json=json)
+        return r.status_code, r.json()

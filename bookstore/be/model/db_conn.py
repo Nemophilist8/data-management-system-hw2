@@ -1,4 +1,9 @@
-from model import store
+import os
+import sys
+sys.path[0] = os.path.dirname(os.getcwd())
+import logging
+
+from be.model import store
 import psycopg2
 
 class DBConn:

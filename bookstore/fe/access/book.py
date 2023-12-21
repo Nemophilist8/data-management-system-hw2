@@ -1,9 +1,9 @@
 import os
 import sqlite3 as sqlite
-import random
 import base64
-import simplejson as json
-
+from urllib.parse import urljoin
+import requests
+from fe import conf
 
 class Book:
     id: str
@@ -21,12 +21,42 @@ class Book:
     book_intro: str
     content: str
     tags: str
+    picture: bytes
 
+def search_in_store(store_id,title,author,publisher,isbn,content,tags,book_intro,page=1,per_page=10):
+    json ={
+            'store_id':store_id,
+            'title': title,
+            'author': author,
+            'publisher': publisher,
+            'isbn': isbn,
+            'content': content,
+            'tags': tags,
+            'book_intro': book_intro,
+            'page': page,
+            "per_page": per_page
+        }
+    url = urljoin(urljoin(conf.URL, "book/"), "search_in_store")
+    r = requests.post(url, json=json)
+    return r.status_code,r.json()
 
-    def __init__(self):
-        self.tags = []
-        self.pictures = []
-
+def search_all(title,author,publisher,isbn,content,tags,book_intro,page=1,per_page=10):
+    json ={
+            'title': title,
+            'author': author,
+            'publisher': publisher,
+            'isbn': isbn,
+            'content': content,
+            'tags': tags,
+            'book_intro': book_intro,
+            'page': page,
+            "per_page": per_page
+        }
+    url = urljoin(urljoin(conf.URL, "book/"), "search_all")
+    print(url)
+    print(json)
+    r = requests.post(url, json=json)
+    return r.status_code,r.json()
 
 class BookDB:
     def __init__(self, large: bool = False):
@@ -75,22 +105,14 @@ class BookDB:
             book.author_intro = row[12]
             book.book_intro = row[13]
             book.content = row[14]
-            tags = row[15]
+            book.tags = row[15]
 
             picture = row[16]
 
-            for tag in tags.split("\n"):
-                if tag.strip() != "":
-                    book.tags.append(tag)
-            for i in range(0, random.randint(0, 9)):
-                if picture is not None:
-                    encode_str = base64.b64encode(picture).decode("utf-8")
-                    book.pictures.append(encode_str)
-            books.append(book)
-            # print(tags.decode('utf-8'))
+            if picture is not None:
+                encode_str = base64.b64encode(picture).decode("utf-8")
+                book.picture = encode_str
 
-            # print(book.tags, len(book.picture))
-            # print(book)
-            # print(tags)
+            books.append(book)
 
         return books
