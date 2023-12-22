@@ -34,6 +34,20 @@ def seller_add_book():
 
     return jsonify({"message": message}), code
 
+@bp_seller.route("/change_price", methods=["POST"])
+def change_price():
+    user_id: str = request.json.get("user_id")
+    store_id: str = request.json.get("store_id")
+    book_id: str = request.json.get("book_id")
+    price: int = int(request.json.get("stock_level", 0))
+
+    s = seller.Seller()
+    code, message = s.change_price(
+        user_id, store_id,book_id, price
+    )
+
+    return jsonify({"message": message}), code
+
 
 @bp_seller.route("/add_stock_level", methods=["POST"])
 def add_stock_level():
@@ -61,3 +75,4 @@ def get_seller_orders():
     s = seller.Seller()
     code, message, orders = s.get_seller_orders(user_id)
     return jsonify({"message": message, "orders": orders}), code
+

@@ -17,6 +17,32 @@ class Seller(db_conn.DBConn):
     def __init__(self):
         db_conn.DBConn.__init__(self)
 
+    def change_price(self,user_id: str,store_id: str,book_id: str, price:int):
+        cursor = None
+        try:
+            # 检验合法性
+            if not self.user_id_exist(user_id):
+                return error.error_non_exist_user_id(user_id)
+            if not self.store_id_exist(store_id):
+                return error.error_non_exist_store_id(store_id)
+            if not self.book_id_exist(store_id, book_id):
+                return error.error_non_exist_book_id(book_id)
+            cursor.execute(
+                "UPDATE store SET price = %s WHERE store_id = %s AND book_id = %s",
+                (price, store_id, book_id),
+            )
+            self.conn.commit()
+        except psycopg2.Error as e:
+            return 528, "{}".format(str(e))
+        except pymongo.errors.PyMongoError as e:
+            return 528, "{}".format(str(e))
+        except BaseException as e:
+            return 530, "{}".format(str(e))
+        finally:
+            if cursor:
+                cursor.close()
+        return 200, "ok"
+
     def add_book(
         self,
         user_id: str,
