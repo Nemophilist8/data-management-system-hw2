@@ -57,20 +57,25 @@ class User(db_conn.DBConn):
             return False
 
     def register(self, user_id: str, password: str):
-        cursor = None
+        cursor = None       # 声明cursor
         try:
+            if self.user_id_exist(user_id):  # 判断用户名是否重复
+                return error.error_non_exist_user_id(user_id)
             terminal = "terminal_{}".format(str(time.time()))
             token = jwt_encode(user_id, terminal)
+            # 获取连接的一个cursor
             cursor = self.conn.cursor()
             cursor.execute(
                 "INSERT into \"user\"(user_id, password, balance, token, terminal) "
                 "VALUES (%s, %s, %s, %s, %s);",
                 (user_id, password, 0, token, terminal),
             )
+            # 提交事务
             self.conn.commit()
         except psycopg2.Error as e:
             return error.error_exist_user_id(user_id)
         finally:
+            # 如果游标对象存在则将其关闭
             if cursor:
                 cursor.close()
         return 200, "ok"
@@ -103,7 +108,6 @@ class User(db_conn.DBConn):
         return 200, "ok"
 
     def login(self, user_id: str, password: str, terminal: str) -> (int, str, str):
-        token = ""
         cursor = None
         try:
             code, message = self.check_password(user_id, password)
@@ -130,12 +134,16 @@ class User(db_conn.DBConn):
     def logout(self, user_id: str, token: str) -> bool:
         cursor = None
         try:
+            # 检查用户提供的token是否有效
             code, message = self.check_token(user_id, token)
             if code != 200:
                 return code, message
+
+            # 生成一个新的终端标识，并用它生成一个新的令牌
             terminal = "terminal_{}".format(str(time.time()))
             dummy_token = jwt_encode(user_id, terminal)
 
+            # 更新数据库中的用户信息，将令牌和终端标识替换为新的值
             cursor = self.conn.cursor()
             cursor.execute(
                 "UPDATE \"user\" SET token = %s, terminal = %s WHERE user_id= %s",
@@ -157,11 +165,13 @@ class User(db_conn.DBConn):
     def unregister(self, user_id: str, password: str) -> (int, str):
         cursor = None
         try:
+            # 首先，检查提供的密码是否匹配用户的密码
             code, message = self.check_password(user_id, password)
             if code != 200:
                 return code, message
 
             cursor = self.conn.cursor()
+            # 从数据库中删除匹配用户ID的用户
             cursor.execute("DELETE from \"user\" where user_id=%s", (user_id,))
             if cursor.rowcount == 1:
                 self.conn.commit()
@@ -181,13 +191,16 @@ class User(db_conn.DBConn):
     ) -> bool:
         cursor = None
         try:
+            # 检查提供的旧密码是否匹配用户的当前密码
             code, message = self.check_password(user_id, old_password)
             if code != 200:
                 return code, message
 
+            # 生成一个新的 token，以及 terminal，用于后续的身份验证
             terminal = "terminal_{}".format(str(time.time()))
             token = jwt_encode(user_id, terminal)
             cursor = self.conn.cursor()
+            # 将用户的密码、token 和 terminal 更新为新值
             cursor.execute(
                 "UPDATE \"user\" set password = %s, token= %s , terminal = %s where user_id = %s",
                 (new_password, token, terminal, user_id),

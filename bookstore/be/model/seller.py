@@ -1,6 +1,9 @@
 import psycopg2
 import os
 import sys
+
+import pymongo
+
 sys.path[0] = os.path.dirname(os.getcwd())
 
 from be.model import error
@@ -24,6 +27,7 @@ class Seller(db_conn.DBConn):
     ):
         cursor = None
         try:
+            # 检验合法性
             if not self.user_id_exist(user_id):
                 return error.error_non_exist_user_id(user_id)
             if not self.store_id_exist(store_id):
@@ -37,7 +41,9 @@ class Seller(db_conn.DBConn):
 
             bookpic_collection = self.db["pic"]
 
+            # 检查这本书是否在图书集中存在过，如果不存在则向图书集中存入这本书
             if not self.book_id_exist_in_all(book_data['id']):
+                # 向PostgreSQL中添加结构化信息
                 cursor.execute(
                     "INSERT INTO book (id, title, author, publisher, original_title, translator, pub_year,\
                                        pages, price, currency_unit, binding, isbn, author_intro, book_intro,\
@@ -46,23 +52,21 @@ class Seller(db_conn.DBConn):
                      book_data['pages'],book_data['price'], book_data['currency_unit'], book_data['binding'], book_data['isbn'],book_data['author_intro'], book_data['book_intro'],
                      book_data['content'], book_data['tags']),
                 )
+                # 向MongoDB中添加非结构化信息
                 bookpic_collection.insert_one({'id':book_data['id'],'pic':Binary(b64decode(book_data['picture']))})
+
+            # 向store表中插入图书信息
             cursor.execute(
                 "INSERT INTO store (store_id, book_id, price, stock_level) VALUES (%s, %s, %s, %s)",
                 (store_id, book_id, price, stock_level),
             )
             self.conn.commit()
-        # except psycopg2.Error as e:
-        #     print(1,e)
-        #     return 528, "{}".format(str(e))
-        # except pymongo.errors.PyMongoError as e:
-        #     print(2,e)
-        #     return 528, "{}".format(str(e))
-        # except BaseException as e:
-        #     print(3,e)
-        #     return 530, "{}".format(str(e))
-        except Exception as e:
+        except psycopg2.Error as e:
             return 528, "{}".format(str(e))
+        except pymongo.errors.PyMongoError as e:
+            return 528, "{}".format(str(e))
+        except BaseException as e:
+            return 530, "{}".format(str(e))
         finally:
             if cursor:
                 cursor.close()
@@ -138,6 +142,7 @@ class Seller(db_conn.DBConn):
             if status != "paid":
                 return error.error_status_fail(order_id)
 
+            # 更新订单状态为 "shipped" 并记录发货时间
             cursor.execute(
                 "UPDATE \"order\" SET status = %s, received_at = %s WHERE order_id = %s",
                 ('shipped', datetime.now().isoformat(), order_id),

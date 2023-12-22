@@ -10,6 +10,7 @@ from be.model import error, db_conn
 class OrderAutoCancel(db_conn.DBConn):
     def __init__(self):
         db_conn.DBConn.__init__(self)
+        # 如果将每分钟执行一次（60s）改为更小的时间间隔，可以更好地保证订单可以在一分钟之内被取消
         self.cancel_timer = threading.Timer(60, self.cancel_unpaid_orders)  # 定时器每分钟执行一次
         self.cancel_timer.start()
 
@@ -23,6 +24,7 @@ class OrderAutoCancel(db_conn.DBConn):
                 ('unpaid',),
             )
             current_time = datetime.now()
+            # 此处的1表示订单unpaid状态保持1分钟之后就会被取消
             time_interval = current_time - timedelta(minutes=1)
             rows = cursor.fetchall()
             for row in rows:

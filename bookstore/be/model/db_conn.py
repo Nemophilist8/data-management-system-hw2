@@ -50,6 +50,7 @@ class DBConn:
         else:
             return True
 
+    # 增加了判断某本书是否在book表中的判断
     def book_id_exist_in_all(self, book_id):
         cursor = self.conn.cursor()
         cursor.execute(

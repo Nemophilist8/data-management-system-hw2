@@ -17,6 +17,7 @@ class Book(db_conn.DBConn):
         results = []
 
         try:
+            # 在store中搜索商店中拥有的图书列表
             cursor = conn.cursor()
             cursor.execute(
                 "SELECT book_id FROM store WHERE store_id = %s",
@@ -39,16 +40,21 @@ class Book(db_conn.DBConn):
                         qs_dict1[key] = ''
                     qs_dict1[key] = '%'+value+'%'
 
+                # 按对应的要求与限制图书，返回结构化信息
                 cursor.execute(
                     "SELECT * FROM book WHERE id IN %s AND title LIKE %s AND author LIKE %s AND publisher LIKE %s AND isbn LIKE %s AND content LIKE %s AND tags LIKE %s AND book_intro LIKE %s LIMIT %s OFFSET %s",
                     (tuple(book_ids),qs_dict1['title'],qs_dict1['author'],qs_dict1['publisher'],qs_dict1['isbn'],qs_dict1['content'],qs_dict1['tags'],qs_dict1['book_intro'],per_page,(page - 1) * per_page),
                 )
+
+                # 获取图片集合
                 bookpic_collection = self.db["pic"]
                 rows = cursor.fetchall()
                 for rowi in range(len(rows)):
                     row = rows[rowi]
+                    # 从MongoDB中找到对应的图片
                     pic = bookpic_collection.find_one({'id': row[0]}, {'_id': 0})
                     pic = pic['pic']
+                    # 组装成完整的结果
                     results.append({
                         'id': row[0],
                         'title': row[1],
